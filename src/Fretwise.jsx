@@ -27,11 +27,13 @@ export class Fretwise extends FretwiseLogic {
       'border-radius:9px;font-weight:600;cursor:pointer;font-family:Space Grotesk,sans-serif;transition:all .15s;border:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;' +
       (s.tab === 'metronome'
         ? 'background:#fbf9f2;color:#2b2722;box-shadow:0 1px 4px rgba(70,56,30,.16);'
-        : 'background:transparent;color:#8a8170;');
+        : 'background:transparent;color:#676154;');
 
     return (
       <div style="min-height:100vh;background:#f3eee2;font-family:'Manrope',system-ui,sans-serif;color:#34302a;padding:0 20px 72px;">
+        <a class="skip-link" href="#main-content">Skip to content</a>
         <header style="position:sticky;top:0;z-index:30;background:#f3eee2;margin:0 -20px;padding:14px 20px 12px;display:flex;justify-content:center;box-shadow:0 4px 14px -10px rgba(70,56,30,.4);">
+          <h1 class="sr-only">Fretwise — learn the guitar fretboard, chords, and ear training</h1>
           <nav style={out.navStyle} aria-label="Sections">
             {out.tabBtns.map((b) => (
               <button key={b.key} onClick={b.onClick} style={b.style} aria-pressed={s.tab === b.key}>{b.label}</button>
@@ -40,7 +42,7 @@ export class Fretwise extends FretwiseLogic {
           </nav>
         </header>
 
-        <main style="max-width:1080px;margin:0 auto;">
+        <main id="main-content" style="max-width:1080px;margin:0 auto;">
           {out.isFret && this.renderFretboard(out, s)}
           {out.isChords && this.renderChords(out, s)}
           {out.isQuiz && this.renderQuiz(out, s)}
@@ -54,7 +56,7 @@ export class Fretwise extends FretwiseLogic {
 
   // ---------------- Fretboard ----------------
   renderFretboard(out, s) {
-    const numCell = "display:flex;justify-content:center;align-items:flex-end;font-size:12px;color:#7c6f52;font-weight:700;font-family:'Space Grotesk',sans-serif;padding-bottom:4px;";
+    const numCell = "display:flex;justify-content:center;align-items:flex-end;font-size:12px;color:#6d6248;font-weight:700;font-family:'Space Grotesk',sans-serif;padding-bottom:4px;";
     const rowLabel = "display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:1px;padding-right:12px;background:#ece1c9;line-height:1;";
 
     const cell = (c) => (
@@ -90,8 +92,8 @@ export class Fretwise extends FretwiseLogic {
               {out.typeOptions.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
             </select>
           </div>
-          <button onClick={out.toggleScaleOnly} style={out.scaleOnlyStyle}>Dim off-scale</button>
-          <button onClick={out.playScale} style={out.playScaleStyle}>▶ Play scale</button>
+          <button onClick={out.toggleScaleOnly} style={out.scaleOnlyStyle} disabled={s.scaleType === 'none'} aria-disabled={s.scaleType === 'none'}>Dim off-scale</button>
+          <button onClick={out.playScale} style={out.playScaleStyle} disabled={s.scaleType === 'none'} aria-disabled={s.scaleType === 'none'}>▶ Play scale</button>
         </div>
 
         {/* desktop board */}
@@ -140,7 +142,7 @@ export class Fretwise extends FretwiseLogic {
             </div>
             {out.vRows.map((r) => (
               <div key={r.fret} style={'display:grid;grid-template-columns:' + out.vGrid + ';align-items:center;'}>
-                <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;padding-right:7px;font-size:12px;color:#7c6f52;font-weight:700;font-family:'Space Grotesk',sans-serif;">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;padding-right:7px;font-size:12px;color:#6d6248;font-weight:700;font-family:'Space Grotesk',sans-serif;">
                   {r.marker && <span style={'display:inline-block;width:5px;height:5px;border-radius:50%;background:#bcab85;' + (r.dbl ? 'box-shadow:-6px 0 0 #bcab85;' : '')}></span>}
                   {r.fretLabel}
                 </div>
@@ -162,7 +164,7 @@ export class Fretwise extends FretwiseLogic {
               <div style={"font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:70px;line-height:.85;letter-spacing:-.03em;color:" + out.selColor + ';'}>{out.selName}</div>
               <div>
                 <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;color:#6f6759;font-weight:600;">{out.selOctaveLabel}</div>
-                <div style="font-size:13px;color:#a89c84;margin-top:2px;">{out.selFreq} Hz</div>
+                <div style="font-size:13px;color:#79705f;margin-top:2px;">{out.selFreq} Hz</div>
               </div>
             </div>
             <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
@@ -175,7 +177,7 @@ export class Fretwise extends FretwiseLogic {
           <div style={'flex:1 1 360px;padding:18px 20px;' + card}>
             <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;">
               <div style={kicker + 'white-space:nowrap;'}>{out.staffTitle}</div>
-              <div style="font-size:11px;color:#857a64;white-space:nowrap;">sounds 8va lower</div>
+              <div style="font-size:11px;color:#6e6553;white-space:nowrap;">sounds 8va lower</div>
             </div>
             <div style="background:#fffdf8;border:1px solid #ece3cf;border-radius:12px;padding:8px;display:flex;align-items:center;min-height:188px;">{out.staffEl}</div>
             {out.staffPickable && (
@@ -227,7 +229,7 @@ export class Fretwise extends FretwiseLogic {
           <div style={'flex:1 1 360px;min-width:280px;padding:20px;' + card}>
             <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;">
               <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;color:#2b2722;letter-spacing:-.01em;">{out.chordName}</div>
-              <div style="font-size:11px;color:#8a8170;background:#efe7d4;padding:5px 11px;border-radius:999px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;">{out.chordKind}</div>
+              <div style="font-size:11px;color:#676154;background:#efe7d4;padding:5px 11px;border-radius:999px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;">{out.chordKind}</div>
             </div>
             <div style="background:#fffdf8;border:1px solid #ece3cf;border-radius:12px;padding:6px;margin-top:14px;">{out.chordDiagramEl}</div>
             <div style="display:flex;gap:8px;margin-top:14px;">
@@ -247,7 +249,7 @@ export class Fretwise extends FretwiseLogic {
             <div style={'padding:18px;' + card}>
               <div style="display:flex;align-items:baseline;justify-content:space-between;">
                 <span style={kicker}>Chord tones</span>
-                <span style="font-size:11px;color:#857a64;">tap to hear</span>
+                <span style="font-size:11px;color:#6e6553;">tap to hear</span>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
                 {out.chordTones.map((t, i) => (
@@ -269,7 +271,7 @@ export class Fretwise extends FretwiseLogic {
         <div style={'margin-top:14px;padding:18px;' + card}>
           <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
             <span style={kicker}>Practice progressions</span>
-            <span style="font-size:11.5px;color:#8a8170;">tap to hear the chords change</span>
+            <span style="font-size:11.5px;color:#676154;">tap to hear the chords change</span>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             {out.progressions.map((p, i) => (
@@ -337,7 +339,7 @@ export class Fretwise extends FretwiseLogic {
               <div style={row}><span style="color:#6f6759;">Best streak</span><strong style="color:#3c372f;">{out.qBest}</strong></div>
             </div>
             <div style="margin-top:14px;padding:12px 14px;background:#efe7d4;border:1px solid #e0d6bf;border-radius:12px;font-size:13px;line-height:1.55;color:#6d6456;">
-              <span style="font-weight:700;color:#857a64;">Tip · </span>{out.qTip}
+              <span style="font-weight:700;color:#6e6553;">Tip · </span>{out.qTip}
             </div>
           </div>
         </div>

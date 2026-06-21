@@ -292,11 +292,14 @@ export class FretwiseLogic extends Component {
   }
   dotColor(lab){ return lab==='R'?'#c15f37': lab==='5'?'#4f8568': (lab==='3'||lab==='\u266D3')?'#b07d2e': '#6a6f86'; }
   toneTag(lab){ const m={'R':'ROOT','5':'5TH','3':'3RD','\u266D3':'\u266D3','7':'7TH','\u266D7':'\u266D7','9':'9TH','4':'4TH','6':'6TH'}; return m[lab]||lab; }
+  // WCAG-AA darkened variants of dotColor for small tag TEXT on light cards
+  // (the saturated dotColor stays for fills/dots, which carry white text).
+  toneInk(lab){ return lab==='R'?'#9f4e2d': lab==='5'?'#426f57': (lab==='3'||lab==='♭3')?'#865f23': '#6a6f86'; }
   strumStrip(cv){
     const h=React.createElement, padX=16, cw=46, W=padX*2+6*cw, H=120, els=[];
     cv.strings.forEach(st=>{
       const cx=padX+st.i*cw+cw/2;
-      els.push(h('text',{key:'sn'+st.i,x:cx,y:14,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:10.5,fontWeight:600,fill:'#a89c84'}, String(6-st.i)));
+      els.push(h('text',{key:'sn'+st.i,x:cx,y:14,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:10.5,fontWeight:600,fill:'#79705f'}, String(6-st.i)));
       if(st.muted){
         els.push(h('rect',{key:'mc'+st.i,x:cx-18,y:24,width:36,height:34,rx:9,fill:'#f1ead8',stroke:'#d8ccb2',strokeDasharray:'3 3'}));
         els.push(h('text',{key:'mx'+st.i,x:cx,y:46,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:15,fill:'#b3a890'},'\u2715'));
@@ -305,7 +308,7 @@ export class FretwiseLogic extends Component {
         els.push(h('rect',{key:'pc'+st.i,x:cx-18,y:24,width:36,height:34,rx:9,fill:col}));
         els.push(h('text',{key:'pn'+st.i,x:cx,y:46,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:14,fontWeight:700,fill:'#fff'},st.name));
         const tag=this.toneTag(st.label);
-        els.push(h('text',{key:'rt'+st.i,x:cx,y:73,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:9,fontWeight:700,letterSpacing:'.05em',fill:col}, tag));
+        els.push(h('text',{key:'rt'+st.i,x:cx,y:73,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:9,fontWeight:700,letterSpacing:'.05em',fill:this.toneInk(st.label)}, tag));
       }
     });
     const p=cv.present, fx=padX+p[0]*cw+cw/2, lx=padX+p[p.length-1]*cw+cw/2, ay=96;
@@ -313,7 +316,7 @@ export class FretwiseLogic extends Component {
     els.push(h('path',{key:'arh',d:'M'+(lx+5)+' '+(ay-5)+' L'+(lx+14)+' '+ay+' L'+(lx+5)+' '+(ay+5)+' Z',fill:'#a89a78'}));
     els.push(h('circle',{key:'sd',cx:fx,cy:ay,r:4.5,fill:'#c15f37',stroke:'#fff',strokeWidth:1.5}));
     els.push(h('text',{key:'sl',x:fx,y:ay+18,textAnchor:'middle',fontFamily:'Space Grotesk',fontSize:10,fontWeight:700,fill:'#c15f37'},'start here'));
-    els.push(h('text',{key:'dd',x:lx,y:ay+18,textAnchor:'middle',fontFamily:'Manrope',fontSize:10,fontWeight:600,fill:'#a89c84'},'downstroke'));
+    els.push(h('text',{key:'dd',x:lx,y:ay+18,textAnchor:'middle',fontFamily:'Manrope',fontSize:10,fontWeight:600,fill:'#79705f'},'downstroke'));
     return h('svg',{role:'img','aria-label':'Which strings to strum for '+cv.name+' — start on the root',viewBox:'0 0 '+W+' '+H,width:'100%',style:{maxWidth:W,display:'block',margin:'0 auto'}},els);
   }
 
@@ -358,14 +361,14 @@ export class FretwiseLogic extends Component {
     const s=this.state, self=this;
     const M0=s.isMobile;
     const segBase='padding:'+(M0?'12px 18px':'9px 16px')+';border-radius:'+(M0?'11px':'9px')+';font-weight:600;font-size:'+(M0?'14.5px':'13px')+';cursor:pointer;font-family:Manrope,sans-serif;transition:all .15s;white-space:nowrap;'+(M0?'min-height:46px;display:inline-flex;align-items:center;justify-content:center;':'');
-    const seg=(on)=> segBase+(on? 'background:#fbf9f2;color:#34302a;border:1px solid #e4dcc9;box-shadow:0 1px 3px rgba(70,56,30,.12);' : 'background:transparent;color:#8a8170;border:1px solid transparent;');
+    const seg=(on)=> segBase+(on? 'background:#fbf9f2;color:#34302a;border:1px solid #e4dcc9;box-shadow:0 1px 3px rgba(70,56,30,.12);' : 'background:transparent;color:#676154;border:1px solid transparent;');
     const ctrl=(on,accent)=> 'padding:'+(M0?'11px 15px':'8px 13px')+';border-radius:'+(M0?'11px':'9px')+';font-weight:700;font-size:'+(M0?'14px':'12.5px')+';cursor:pointer;font-family:Manrope,sans-serif;transition:all .15s;white-space:nowrap;'+(M0?'min-height:44px;display:inline-flex;align-items:center;':'')+(on? 'background:'+accent.bg+';color:'+accent.fg+';border:1px solid '+accent.bd+';' : 'background:#fbf9f2;color:#7a7163;border:1px solid #e0d6bf;');
     const INK={bg:'#34302a',fg:'#f6f1e4',bd:'#34302a'}, TERRA={bg:'#f5e2d6',fg:'#a44f2c',bd:'#e6c4ad'}, SAGEA={bg:'#dceadb',fg:'#3a6e54',bd:'#c2dcc0'};
     const selectStyle='background:#fbf9f2;color:#34302a;border:1px solid #ddd2b8;border-radius:9px;padding:'+(M0?'11px 12px':'8px 10px')+';font-family:Manrope,sans-serif;font-size:'+(M0?'15px':'13px')+';font-weight:600;cursor:pointer;'+(M0?'flex:1;min-width:0;':'');
 
     const tabDef=[['fretboard','Fretboard'],['chords','Chords'],['quiz','Ear Trainer']];
     const tabBtns=tabDef.map(([k,l])=>({key:k,label:l,onClick:()=>self.setTab(k),
-      style:(M0?'flex:1;padding:12px 10px;font-size:14px;min-height:46px;':'padding:9px 18px;font-size:14px;')+'border-radius:9px;font-weight:600;cursor:pointer;font-family:Space Grotesk,sans-serif;transition:all .15s;border:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;'+(s.tab===k?'background:#fbf9f2;color:#2b2722;box-shadow:0 1px 4px rgba(70,56,30,.16);':'background:transparent;color:#8a8170;')}));
+      style:(M0?'flex:1;padding:12px 10px;font-size:14px;min-height:46px;':'padding:9px 18px;font-size:14px;')+'border-radius:9px;font-weight:600;cursor:pointer;font-family:Space Grotesk,sans-serif;transition:all .15s;border:none;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;'+(s.tab===k?'background:#fbf9f2;color:#2b2722;box-shadow:0 1px 4px rgba(70,56,30,.16);':'background:transparent;color:#676154;')}));
     const navStyle=(M0?'display:flex;width:100%;':'display:inline-flex;')+'gap:5px;background:#e7dfcd;padding:5px;border-radius:13px;';
 
     const out={ tabBtns, navStyle, selectStyle, isFret:s.tab==='fretboard', isChords:s.tab==='chords', isQuiz:s.tab==='quiz', showInlays:(self.props&&self.props.showInlays)!==false };
@@ -384,7 +387,7 @@ export class FretwiseLogic extends Component {
       const inScale=active? iv.includes(((p-s.scaleRoot)%12+12)%12):false, isRoot=active? p===s.scaleRoot:false;
       const here=(midi===s.sel.midi), exact=(s.sel.i!=null && i===s.sel.i && f===s.sel.f);
       let bg='#f7f0de', bd='#e1d5b9', color='#3b352c', ring='none', op=1, tf='none';
-      if(active){ if(isRoot){bg='#c15f37';bd='#a44f2c';color='#fff';} else if(inScale){bg='#b9d4ac';bd='#94bd85';color='#1f4527';} else {bg='#f3ecd9';bd='#e8dec7';color='#a89c84'; if(s.scaleOnly) op=0.32;} if(exact){ring=RING;tf='scale(1.1)';} }
+      if(active){ if(isRoot){bg='#c15f37';bd='#a44f2c';color='#fff';} else if(inScale){bg='#b9d4ac';bd='#94bd85';color='#1f4527';} else {bg='#f3ecd9';bd='#e8dec7';color='#79705f'; if(s.scaleOnly) op=0.32;} if(exact){ring=RING;tf='scale(1.1)';} }
       else { if(here){bg='#f4cf86';bd='#dcae54';color='#4a3810';} if(exact||(here&&s.sel.i==null)){ring=RING;tf='scale(1.1)';} }
       const chipStyle='min-width:'+chipPx+'px;height:'+chipPx+'px;padding:0 6px;border-radius:9px;display:grid;place-items:center;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:'+chipFs+'px;background:'+bg+';border:1px solid '+bd+';color:'+color+';box-shadow:'+ring+';opacity:'+op+';transform:'+tf+';transition:transform .12s ease;';
       const aria=self.noteName(midi)+self.octave(midi)+', '+self.ORD[i]+' string, '+(f===0?'open':'fret '+f);
@@ -449,7 +452,7 @@ export class FretwiseLogic extends Component {
       const soft= t.label==='R'?['#f5e2d6','#e6c4ad']: t.label==='5'?['#dceadb','#c2dcc0']: (t.label==='3'||t.label==='\u266D3')?['#f3e7d0','#e2d2ad']:['#eae9ef','#d9d8e2'];
       return {tag:self.toneTag(t.label), note:t.name, onClick:()=>self.pluck(t.midi),
         style:'flex:0 0 auto;min-width:62px;padding:9px 14px;border-radius:13px;cursor:pointer;display:flex;flex-direction:column;gap:1px;align-items:center;background:'+soft[0]+';border:1px solid '+soft[1]+';font-family:Space Grotesk,sans-serif;transition:transform .12s;',
-        tagStyle:'font-size:9.5px;font-weight:700;letter-spacing:.06em;color:'+col+';',
+        tagStyle:'font-size:9.5px;font-weight:700;letter-spacing:.06em;color:'+self.toneInk(t.label)+';',
         noteStyle:'font-size:21px;font-weight:700;color:#3c372f;line-height:1.05;'}; });
     const PROG={ basic:[['G','C','D'],['Em','C','G','D'],['Am','F','C','G'],['C','G','Am','F']], seventh:[['Am7','Dm7','G7','Cmaj7'],['G7','C','D7'],['E7','A7','B7']], power:[['E5','A5','B5'],['G5','C5','D5'],['E5','G5','A5']] };
     out.progressions=(PROG[s.chordCat]||[]).map(seq=>({label:seq.join('   \u00b7   '), aria:'Play progression '+seq.join(', '), onClick:()=>self.playProgression(seq)}));
@@ -472,7 +475,7 @@ export class FretwiseLogic extends Component {
       out.qBoardEl=self.miniBoard({highlight:s.qPos?{i:s.qPos.i,f:s.qPos.f}:null});
       out.qChoices=(s.qChoices||[]).map(ch=>{
         let bgc='background:#fbf9f2;color:#34302a;border:1px solid #ddd2b8;';
-        if(s.qResult){ if(ch===s.qAnswer) bgc='background:#dceadb;color:#3a6e54;border:1px solid #b9d6b6;'; else if(ch===s.qWrongNote) bgc='background:#f3dcd2;color:#b5532f;border:1px solid #e6c0ad;'; else bgc='background:#f1ece0;color:#a89c84;border:1px solid #e4dcc9;'; }
+        if(s.qResult){ if(ch===s.qAnswer) bgc='background:#dceadb;color:#3a6e54;border:1px solid #b9d6b6;'; else if(ch===s.qWrongNote) bgc='background:#f3dcd2;color:#b5532f;border:1px solid #e6c0ad;'; else bgc='background:#f1ece0;color:#79705f;border:1px solid #e4dcc9;'; }
         return {label:ch,onClick:()=>self.answerName(ch),style:'min-width:66px;padding:14px 20px;border-radius:12px;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:18px;cursor:pointer;transition:all .15s;'+bgc};
       });
       out.qReplay=()=> s.qPos&&self.pluck(s.qPos.midi);

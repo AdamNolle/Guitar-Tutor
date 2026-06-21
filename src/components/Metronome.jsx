@@ -99,7 +99,7 @@ export function MetronomeView({ getCtx, isMobile }) {
           {/* big BPM readout */}
           <div style="display:flex;align-items:baseline;gap:8px;">
             <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:88px;line-height:.82;letter-spacing:-.04em;color:#2b2722;">{bpm}</div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;color:#8a8170;font-weight:600;">bpm</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;color:#676154;font-weight:600;">bpm</div>
           </div>
           <div style="font-size:13px;color:#a44f2c;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:4px;">{tempoName(bpm)}</div>
 
@@ -147,7 +147,7 @@ export function MetronomeView({ getCtx, isMobile }) {
           </div>
 
           <div style="margin-top:18px;padding:12px 14px;background:#efe7d4;border:1px solid #e0d6bf;border-radius:12px;font-size:13px;line-height:1.55;color:#6d6456;">
-            <span style="font-weight:700;color:#857a64;">Tip · </span>Start slow enough to play every note cleanly, then raise the tempo by 5 bpm once it feels easy.
+            <span style="font-weight:700;color:#6e6553;">Tip · </span>Start slow enough to play every note cleanly, then raise the tempo by 5 bpm once it feels easy.
           </div>
         </div>
       </div>
