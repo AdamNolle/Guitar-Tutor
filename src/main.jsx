@@ -1,9 +1,9 @@
 import { h, render } from 'preact';
 import './styles.css';
-import { Fretwise } from './Fretwise.jsx';
+import { App } from './App.jsx';
 
 render(
-  <Fretwise maxFret={12} defaultTab="fretboard" showInlays={true} />,
+  <App maxFret={12} defaultTab="fretboard" showInlays={true} />,
   document.getElementById('app')
 );
 

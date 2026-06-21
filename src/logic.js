@@ -29,7 +29,7 @@ function createElement(type, props, ...children) {
 // Shim so the design's verbatim React.createElement-based SVG renderers run on Preact.
 const React = { createElement, Fragment };
 
-export class FretwiseLogic extends Component {
+export class AppLogic extends Component {
   constructor(props){
     super(props);
     this.SHARP=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];

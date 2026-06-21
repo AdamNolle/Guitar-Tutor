@@ -2,7 +2,7 @@
    against the document base (works under any GitHub Pages base path) without
    Vite trying to resolve the public/ files at build time. */
 
-/* ---- Global reset + paper theme (verbatim from the Fretwise design) ---- */
+/* ---- Global reset + paper theme (verbatim from the original design) ---- */
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{background:#f3eee2;-webkit-text-size-adjust:100%;font-family:'Manrope',system-ui,sans-serif;}

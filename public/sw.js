@@ -1,7 +1,7 @@
 // Lightweight offline cache. Hashed build assets are immutable, so a simple
 // cache-first strategy is safe; the cache name is bumped on each deploy via the
 // build (see the version token below).
-const CACHE = 'fretwise-v1';
+const CACHE = 'guitar-tutor-v1';
 const SCOPE_URL = new URL(self.registration.scope);
 
 self.addEventListener('install', (e) => {

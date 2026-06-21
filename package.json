@@ -1,9 +1,9 @@
 {
-  "name": "fretwise",
+  "name": "guitar-tutor",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Fretwise — a warm, performant guitar tutor with realistic plucked-string sound.",
+  "description": "Guitar Tutor — a warm, performant guitar tutor with realistic plucked-string sound.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

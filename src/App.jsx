@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import { FretwiseLogic } from './logic.js';
+import { AppLogic } from './logic.js';
 import { MetronomeView } from './components/Metronome.jsx';
 
 // Card / panel shells reused across sections (verbatim styles from the design).
@@ -15,7 +15,7 @@ const GOOD_TO_KNOW = [
   { n: '4', bg: '#e7e0ee', fg: '#5a4d75', text: 'The neck dots (3·5·7·9, then a double dot at 12) are signposts — learn them and you can find any fret at a glance.' },
 ];
 
-export class Fretwise extends FretwiseLogic {
+export class App extends AppLogic {
   render() {
     const out = this.renderVals();
     const s = this.state;
@@ -33,7 +33,7 @@ export class Fretwise extends FretwiseLogic {
       <div style="min-height:100vh;background:#f3eee2;font-family:'Manrope',system-ui,sans-serif;color:#34302a;padding:0 20px 72px;">
         <a class="skip-link" href="#main-content">Skip to content</a>
         <header style="position:sticky;top:0;z-index:30;background:#f3eee2;margin:0 -20px;padding:14px 20px 12px;display:flex;justify-content:center;box-shadow:0 4px 14px -10px rgba(70,56,30,.4);">
-          <h1 class="sr-only">Fretwise — learn the guitar fretboard, chords, and ear training</h1>
+          <h1 class="sr-only">Guitar Tutor — learn the fretboard, chords, and ear training</h1>
           <nav style={out.navStyle} aria-label="Sections">
             {out.tabBtns.map((b) => (
               <button key={b.key} onClick={b.onClick} style={b.style} aria-pressed={s.tab === b.key}>{b.label}</button>

@@ -1,6 +1,6 @@
 {
-  "name": "Fretwise — Guitar Tutor",
-  "short_name": "Fretwise",
+  "name": "Guitar Tutor",
+  "short_name": "Guitar Tutor",
   "description": "Interactive fretboard, chord library, ear training, and a metronome — with realistic guitar sound.",
   "start_url": "./",
   "scope": "./",
