@@ -1,0 +1,29 @@
+/* ---- Self-hosted fonts (no CDN round-trips, instant repeat loads) ---- */
+/* Paths are relative to the built stylesheet (assets/…), so ../fonts resolves to
+   <base>/fonts regardless of the deploy base path (root or /Guitar-Tutor/). */
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:400 700;font-display:swap;src:url('../fonts/space-grotesk.woff2') format('woff2');}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400 800;font-display:swap;src:url('../fonts/manrope.woff2') format('woff2');}
+@font-face{font-family:'Bravura';font-display:swap;src:url('../fonts/bravura.woff2') format('woff2');}
+
+/* ---- Global reset + paper theme (verbatim from the Fretwise design) ---- */
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#f3eee2;-webkit-text-size-adjust:100%;font-family:'Manrope',system-ui,sans-serif;}
+:focus{outline:none;}
+:focus-visible{outline:3px solid #2f6f8f;outline-offset:2px;border-radius:6px;}
+[role="button"]:focus-visible{outline-offset:-2px;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:rgba(120,108,84,.3);border-radius:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ---- Animations ---- */
+@keyframes fwFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@keyframes fingerDrop{0%{opacity:0;transform:translateY(-13px);}70%{opacity:1;transform:translateY(2px);}100%{opacity:1;transform:translateY(0);}}
+@keyframes pickAcross{0%{opacity:0;transform:translateX(0);}12%{opacity:1;}86%{opacity:1;}100%{opacity:0;transform:translateX(var(--sweep,160px));}}
+@keyframes strumString{0%{stroke-width:1;}35%{stroke:#c15f37;stroke-width:3.2;}100%{stroke-width:1;}}
+@keyframes notePop{0%{opacity:.3;transform:translateY(-4px);}45%{opacity:1;transform:translateY(0);}65%{transform:translateY(-1.5px);}100%{opacity:1;transform:translateY(0);}}
+@keyframes chipPlace{0%{transform:scale(.4);opacity:0;}70%{transform:scale(1.18);opacity:1;}100%{transform:scale(1.1);}}
+@keyframes mtPulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(193,95,55,.5);}50%{transform:scale(1.06);}100%{transform:scale(1);box-shadow:0 0 0 18px rgba(193,95,55,0);}}
+
+#app{animation:fwFade .4s ease both;}
