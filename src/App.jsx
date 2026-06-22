@@ -30,9 +30,9 @@ export class App extends AppLogic {
         : 'background:transparent;color:#676154;');
 
     return (
-      <div style="min-height:100vh;background:#f3eee2;font-family:'Manrope',system-ui,sans-serif;color:#34302a;padding:0 20px 72px;">
+      <div style="min-height:100vh;min-height:100dvh;background:#f3eee2;font-family:'Manrope',system-ui,sans-serif;color:#34302a;padding:0 max(20px,env(safe-area-inset-right)) calc(72px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));">
         <a class="skip-link" href="#main-content">Skip to content</a>
-        <header style="position:sticky;top:0;z-index:30;background:#f3eee2;margin:0 -20px;padding:14px 20px 12px;display:flex;justify-content:center;box-shadow:0 4px 14px -10px rgba(70,56,30,.4);">
+        <header style="position:sticky;top:0;z-index:30;background:#f3eee2;margin:0 calc(-1*max(20px,env(safe-area-inset-right))) 0 calc(-1*max(20px,env(safe-area-inset-left)));padding:max(14px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) 12px max(20px,env(safe-area-inset-left));display:flex;justify-content:center;box-shadow:0 4px 14px -10px rgba(70,56,30,.4);">
           <h1 class="sr-only">Guitar Tutor — learn the fretboard, chords, and ear training</h1>
           <nav style={out.navStyle} aria-label="Sections">
             {out.tabBtns.map((b) => (
@@ -130,7 +130,7 @@ export class App extends AppLogic {
 
         {/* mobile (vertical) board */}
         {out.isMobile && (
-          <div style="background:#ece1c9;border:1px solid #d6c9aa;border-radius:16px;padding:12px 12px 14px;box-shadow:inset 0 1px 3px rgba(120,100,60,.08);">
+          <div style="background:#ece1c9;border:1px solid #d6c9aa;border-radius:16px;padding:12px 12px 14px;box-shadow:inset 0 1px 3px rgba(120,100,60,.08);overflow-x:auto;">
             <div style={'display:grid;grid-template-columns:' + out.vGrid + ';align-items:end;margin-bottom:2px;'}>
               <div></div>
               {out.vHeaders.map((hd, i) => (
@@ -183,10 +183,10 @@ export class App extends AppLogic {
             {out.staffPickable && (
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;">
                 <span style="font-size:12px;color:#6f6759;font-weight:700;">Place a note</span>
-                <button onClick={out.octDown} aria-label="Octave down" style="min-width:42px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">−8va</button>
-                <button onClick={out.stepDown} aria-label="Down a semitone" style="min-width:42px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">−1</button>
-                <button onClick={out.stepUp} aria-label="Up a semitone" style="min-width:42px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">+1</button>
-                <button onClick={out.octUp} aria-label="Octave up" style="min-width:42px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">+8va</button>
+                <button onClick={out.octDown} aria-label="Octave down" style="min-width:44px;min-height:44px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">−8va</button>
+                <button onClick={out.stepDown} aria-label="Down a semitone" style="min-width:44px;min-height:44px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">−1</button>
+                <button onClick={out.stepUp} aria-label="Up a semitone" style="min-width:44px;min-height:44px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">+1</button>
+                <button onClick={out.octUp} aria-label="Octave up" style="min-width:44px;min-height:44px;padding:8px 9px;border-radius:9px;background:#efe7d4;color:#4a4236;border:1px solid #e0d6bf;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;">+8va</button>
               </div>
             )}
           </div>

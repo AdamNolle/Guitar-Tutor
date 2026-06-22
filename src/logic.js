@@ -94,8 +94,14 @@ export class AppLogic extends Component {
       isMobile:(typeof window!=='undefined' && window.innerWidth<=640)
     };
   }
-  componentDidMount(){ if(this.state.tab==='quiz') this.newQuestion(); this._onResize=()=>{ const m=window.innerWidth<=640; if(m!==this.state.isMobile) this.setState({isMobile:m}); }; window.addEventListener('resize',this._onResize); this._onResize(); }
-  componentWillUnmount(){ if(this._onResize) window.removeEventListener('resize',this._onResize); }
+  componentDidMount(){ if(this.state.tab==='quiz') this.newQuestion(); this._onResize=()=>{ const m=window.innerWidth<=640; if(m!==this.state.isMobile) this.setState({isMobile:m}); }; window.addEventListener('resize',this._onResize); this._onResize();
+    // Unlock/resume audio on the very first interaction anywhere — pointerdown precedes the
+    // click that triggers a pluck, so the context is already running before the first note.
+    this._unlock=()=>{ try{ this.ensureAudio(); }catch(e){} }; ['pointerdown','touchend','keydown'].forEach(ev=>window.addEventListener(ev,this._unlock,{passive:true}));
+    // iOS suspends/interrupts the context when backgrounded; recover on return (any non-running state).
+    this._onVis=()=>{ if(document.visibilityState==='visible' && this.ctx && this.ctx.state!=='running'){ try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){} try{ const p=this.ctx.resume&&this.ctx.resume(); if(p&&p.catch) p.catch(()=>{}); }catch(e){} } }; document.addEventListener('visibilitychange',this._onVis);
+  }
+  componentWillUnmount(){ if(this._onResize) window.removeEventListener('resize',this._onResize); if(this._unlock) ['pointerdown','touchend','keydown'].forEach(ev=>window.removeEventListener(ev,this._unlock)); if(this._onVis) document.removeEventListener('visibilitychange',this._onVis); this._progToken=(this._progToken||0)+1; }
 
   // ---------- audio ----------
   ensureAudio(){
@@ -120,7 +126,19 @@ export class AppLogic extends Component {
       tame.connect(conv); conv.connect(wet); wet.connect(this.master);
       this.bufs={};
     }
-    if(this.ctx.state==='suspended') this.ctx.resume();
+    // Until the context is actually running, (re)assert the iOS unlock on every gesture.
+    // This matters because the context can be created outside a gesture (or left non-running
+    // after an interruption/background), in which case a one-time prime would never fire.
+    if(this.ctx.state!=='running'){
+      const ctx=this.ctx;
+      // iOS: route through the media/"playback" session so the hardware mute switch and Focus
+      // modes don't silence us. Without this, WebAudio is dead on most iPhones even though
+      // everything else is wired correctly. (Safari 16.4+, ignored/try-caught elsewhere.)
+      try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+      // Prime with one silent sample so iOS marks the context user-started inside this gesture.
+      try{ const b=ctx.createBuffer(1,1,ctx.sampleRate), s=ctx.createBufferSource(); s.buffer=b; s.connect(ctx.destination); s.start(0); }catch(e){}
+      try{ const p=ctx.resume&&ctx.resume(); if(p&&p.catch) p.catch(()=>{}); }catch(e){}
+    }
   }
   makeIR(dur,decay){
     const ctx=this.ctx, sr=ctx.sampleRate, len=Math.floor(sr*dur), buf=ctx.createBuffer(2,len,sr);
@@ -322,7 +340,9 @@ export class AppLogic extends Component {
 
   // ---------- quiz ----------
   miniBoard(opts){
-    const h=React.createElement, padL=46, padT=18, cw=30, ch=24, frets=this.fretCount();
+    // On phones the board renders at natural size (scrolls inside its overflow-x:auto wrapper)
+    // so fret cells are a tappable ~42px instead of the ~18px they shrink to when scaled to fit.
+    const h=React.createElement, M=this.state.isMobile, padL=46, padT=18, cw=M?42:30, ch=M?40:24, frets=this.fretCount();
     const W=padL+frets*cw+12, H=padT+6*ch+24, els=[];
     for(let i=0;i<6;i++){ const y=padT+i*ch+ch/2; els.push(h('line',{key:'s'+i,x1:padL,x2:padL+frets*cw,y1:y,y2:y,stroke:'rgba(120,108,84,'+(0.3+(5-i)*0.05)+')',strokeWidth:1+(5-i)*0.35})); els.push(h('text',{key:'sl'+i,x:padL-9,y:y+4,textAnchor:'end',fontFamily:'Space Grotesk',fontSize:12.5,fontWeight:700,fill:'#3b352c'},this.noteName(this.OPEN[i]))); }
     for(let f=0;f<=frets;f++){ const x=padL+f*cw, nut=f===1; els.push(h('line',{key:'f'+f,x1:x,x2:x,y1:padT,y2:padT+6*ch,stroke:nut?'#897b5d':'#d3c7ab',strokeWidth:nut?3:1})); }
@@ -333,7 +353,7 @@ export class AppLogic extends Component {
     if(opts.highlight) dot(opts.highlight.i,opts.highlight.f,'#b07d2e','?',true);
     if(opts.wrong){ const x=padL+opts.wrong.f*cw-cw/2, y=padT+opts.wrong.i*ch+ch/2; els.push(h('circle',{key:'wr',cx:x,cy:y,r:11.5,fill:'none',stroke:'#c0533a',strokeWidth:2.5})); }
     if(opts.clickable){ for(let i=0;i<6;i++)for(let f=0;f<frets;f++){ const ii=i,ff=f; els.push(h('rect',{key:'r'+i+'_'+f,x:padL+f*cw,y:padT+i*ch,width:cw,height:ch,fill:'transparent',tabIndex:0,role:'button','aria-label':this.noteName(this.OPEN[ii]+ff)+', '+this.ORD[ii]+' string '+(ff===0?'open':'fret '+ff),style:{cursor:'pointer'},onClick:()=>opts.onCell(ii,ff),onKeyDown:(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();opts.onCell(ii,ff);}}})); } }
-    return h('svg',{role:'img','aria-label': opts.clickable?'Tap or select a fret to place your answer':'Practice fretboard',viewBox:'0 0 '+W+' '+H,width:'100%',style:{maxWidth:W,display:'block'}},els);
+    return h('svg',{role:'img','aria-label': opts.clickable?'Tap or select a fret to place your answer':'Practice fretboard',viewBox:'0 0 '+W+' '+H,width: M?W:'100%',style:{maxWidth: M?'none':W,display:'block'}},els);
   }
   newQuestion(){
     const fc=this.fretCount();

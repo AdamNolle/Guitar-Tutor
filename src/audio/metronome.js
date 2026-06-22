@@ -79,7 +79,7 @@ export class Metronome {
     if (this.isRunning) return;
     this.ctx = this.getCtx();
     if (!this.ctx) return;
-    if (this.ctx.state === 'suspended') this.ctx.resume();
+    if (this.ctx.state !== 'running') { try { const p = this.ctx.resume && this.ctx.resume(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
     this.isRunning = true;
     this.currentBeat = 0;
     this.nextNoteTime = this.ctx.currentTime + 0.06;

@@ -5,7 +5,13 @@
 /* ---- Global reset + paper theme (verbatim from the original design) ---- */
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{background:#f3eee2;-webkit-text-size-adjust:100%;font-family:'Manrope',system-ui,sans-serif;}
+body{background:#f3eee2;-webkit-text-size-adjust:100%;font-family:'Manrope',system-ui,sans-serif;overscroll-behavior-y:none;}
+/* ---- Mobile touch behavior ---- */
+/* Kill the gray iOS tap flash and the legacy 300ms click delay on everything tappable.
+   Range inputs are excluded: touch-action:manipulation can hijack a thumb drag as a page pan. */
+button,a,[role="button"],select,label{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+/* Interactive controls shouldn't select text or trigger double-tap zoom when tapped fast. */
+button,[role="button"]{-webkit-user-select:none;user-select:none;}
 :focus{outline:none;}
 :focus-visible{outline:3px solid #2f6f8f;outline-offset:2px;border-radius:6px;}
 [role="button"]:focus-visible{outline-offset:-2px;}
